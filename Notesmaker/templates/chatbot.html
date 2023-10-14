@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ChatBot</title>
+    {% load static %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js">
+    </script>
+    <!--<link rel="stylesheet" type="text/css" href="{% static 'static/style.css' %}"/>-->
+    <style>
+        body {
+            height: 140%;
+            background: #C8C8C8;
+            background-image: url("/static/images/bg2.png");
+            background-size: cover;
+            font-family: "Times New Roman", Times, serif;
+        }
+        .navbar-brand ul {
+            list-style-type: none;
+            margin: 0;
+            padding-left: 35px;
+            padding-bottom: 10px;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255,255,255, 0.95);
+            border-radius: 0px 0px 20px 20px;
+            box-shadow: 0px 0px 10px black;
+        }
+        .navbar-brand ul li.top {
+            padding-left: 100px;
+            margin-left: 10px;
+            font-size: 50px;
+            text-transform: uppercase;
+            font-family: 'Trebuchet MS', sans-serif;
+        }
+        .img-responsive{
+            margin-top: 20px;
+            margin-bottom: 20px;
+            padding-right: 30px;
+            padding-left: 650px;
+            width: 55%;
+        }
+        
+        #chatbox{
+            margin-left:auto;
+            margin-right: auto;
+            width: 70%;
+            margin-top: 50px;
+            border-radius: 10px;
+            border: 1px solid gray;
+            background-color: whitesmoke;
+            padding: 10px;
+        }
+
+        .botText{
+            font-family: monospace;
+            font-size: 16px;
+            text-align: left;
+            line-height: 25px;
+            color: rgb(109,111,109);
+        }
+
+        #userInput{
+            margin-left:auto;
+            margin-right: auto;
+            margin-top: 40px;
+            width: 70%;
+            text-align: center;
+        }
+
+        #textInput{
+            border:3px solid white;
+            border-bottom: 3px solid #afafaf;
+            border-radius: 10px;
+            background-color: whitesmoke;
+            font-family: monospace;
+            font-size: 16px;
+            width: 60%;
+            padding: 16px;
+            color:rgb(213,67,41);
+        }
+
+        #buttonInput{
+            padding:5px;
+            font-family:monospace;
+            font-size: 16px;
+            border:3px solid #5b605c;
+            background-color: rgb(40,48,40);
+            border-radius: 10px;
+
+        }
+
+        #Chatnotes{
+            text-align: center;
+            color:rgb(57,72,57);
+        }
+
+        .userText{
+            text-align: right;
+            font-family: monospace;
+            font-size: 16px;
+            line-height: 25px;
+            color: rgb(109,111,109);
+        }
+        #sendMessage{
+            font-family: monospace;
+            width: 100px;
+            height: 37px;
+            font-size: 25px;
+            color: cornsilk;
+            background: #030000;
+            text-align: auto;
+            position: relative;
+            border-radius: 10px;
+            box-shadow: 2px 2px rgb(247, 247, 245);
+            border: 3px;
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="navbar-brand">
+        <ul>
+            <li style="float: center; "><img src="{% static '/images/askbot.png' %}" alt="Notepad" class="img-responsive"></li>
+        </ul>
+    </div>
+    
+    <div>
+        <div id="chatbox" >
+            <p class="botText"><span>Hi there</span></p>
+        </div>
+        <div id="userInput">
+            <input type="text" id="textInput" name="'userMessage" placeholder="Type your message..."/>
+            <button id="sendMessage">Send</button>
+        </div>
+    </div>
+
+
+    <script>
+        function getUserResponse(){
+            var userText = $('#textInput').val();
+
+            if(userText.trim()!==''){
+                var userHTML="<p class='userText'><strong>User: </strong><span>"+userText+"</span></p>"
+                $('#textInput').val("");
+                $('#chatbox').append(userHTML);
+                //console.log(userHTML)
+
+                //sending user's message to server
+                $.get('getResponse/',{userMessage:userText}).done(function(data){
+                    console.log(data)
+                var returnedMessage = '<p class="botText"><strong>Chatbot: </strong><span>'+data+'</span></p>'
+                console.log(returnedMessage)
+                $('#chatbox').append(returnedMessage);
+                $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);
+            });
+            }
+        }
+
+        $('#sendMessage').click(getUserResponse);
+
+
+
+
+    </script>
+    
+</body>
+</html>
