@@ -4,7 +4,7 @@ from django.shortcuts import render
 import openai
 from notesmaker.video_to_text import vidgentext
 from notesmaker.pdfgen import generatepdf
-openai.api_key = "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"
+openai.api_key = "OPENAI_API_KEY"
 userMessage=""
 user_input=" "
 ai_response = ""
@@ -41,28 +41,20 @@ async def analyze(requests):
     #send thi url to model and return text
     return render(requests,'analyze.html')
 
-# prompt = f"""Summarize the text below which is delimited with triple backticks in 50 words.
-#       Text:'''{user_input}''' """
-
 def chatbot(requests):
     return render(requests,'chatbot.html')
 
 async def getResponse(requests):
     global ai_response
     userMessage = requests.GET.get('userMessage')
-    # print(ai_response)
     userprompt=f"""Your are friendly AI teacher who will read the given text delimited by triple backticks 
 and respond to user's text delimited by triple backticks the questions,doubts, or text they ask or send according to the text you read. Also can respond to their greetings in friendly manner (eg hi,hello,goodmorning,goodevening,goodafternoon etc)
 text:'''{ai_response}'''
 user's text: {userMessage}"""
     chatResponse = str(await get_response(userprompt))
-    # print(chatResponse)
     return HttpResponse(chatResponse)
 
-# userprompt=f"""Your are friendly AI teacher who will read the given text delimited by triple backticks 
-# and respond to user's text delimited by triple backticks the questions,doubts, or text they ask or send. Also can respond to their greetings in friendly manner (eg hi,hello,goodmorning,goodevening,goodafternoon etc)
-# text:'''{ai_response}'''
-# user's text: {chatResponse}"""
+
 async def get_response(userprompt,model="gpt-3.5-turbo"):
     messages = [{"role": "user", "content": userprompt}]
     response = openai.ChatCompletion.create(
